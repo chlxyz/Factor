@@ -10,8 +10,8 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-FactorAudioProcessorEditor::FactorAudioProcessorEditor (FactorAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+FactorAudioProcessorEditor::FactorAudioProcessorEditor(FactorAudioProcessor& p)
+    : AudioProcessorEditor(&p), processor(p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -26,7 +26,10 @@ FactorAudioProcessorEditor::FactorAudioProcessorEditor (FactorAudioProcessor& p)
         };
     addAndMakeVisible(depthSlider);
 
-    setSize(200, 200);
+    addAndMakeVisible(waveform);
+    startTimerHz(30); // update waveform
+
+    setSize(400, 250); // expanded size for display
 }
 
 FactorAudioProcessorEditor::~FactorAudioProcessorEditor()
@@ -34,6 +37,11 @@ FactorAudioProcessorEditor::~FactorAudioProcessorEditor()
 }
 
 //==============================================================================
+void FactorAudioProcessorEditor::timerCallback()
+{
+    waveform.pushBuffer(processor.getVisualBuffer());
+}
+
 void FactorAudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
@@ -43,5 +51,6 @@ void FactorAudioProcessorEditor::paint(juce::Graphics& g)
 void FactorAudioProcessorEditor::resized()
 {
     depthSlider.setBounds(40, 40, 120, 120); // x, y, width, height
+    waveform.setBounds(160, 20, getWidth() - 180, 120);
 }
 
