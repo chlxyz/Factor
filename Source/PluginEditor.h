@@ -10,11 +10,13 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "WaveformDisplay.h"
 
 //==============================================================================
 /**
 */
-class FactorAudioProcessorEditor  : public juce::AudioProcessorEditor
+class FactorAudioProcessorEditor  : public juce::AudioProcessorEditor,
+    private juce::Timer
 {
 public:
     FactorAudioProcessorEditor (FactorAudioProcessor&);
@@ -29,6 +31,9 @@ private:
     // access the processor object that created it.
     FactorAudioProcessor& processor;
     juce::Slider depthSlider;
+    WaveformDisplay waveform;
+
+    void timerCallback() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FactorAudioProcessorEditor)
 };
