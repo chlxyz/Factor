@@ -53,11 +53,15 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    const juce::AudioBuffer<float>& getVisualBuffer() const { return visualBuffer; }
+
     juce::AudioParameterFloat* depthParam;
 
 private:
     juce::AudioBuffer<float> delayBuffer;
     int delayBufferWritePosition = 0;
+
+    juce::AudioBuffer<float> visualBuffer;
 
     float lfoPhase = 0.0f;
     float lfoFrequency = 5.0f; // Hz

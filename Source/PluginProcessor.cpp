@@ -187,6 +187,9 @@ void FactorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
             delayBufferWritePosition = (delayBufferWritePosition + 1) % delayBuffer.getNumSamples();
         }
     }
+
+    visualBuffer.setSize(1, buffer.getNumSamples(), false, false, true);
+    visualBuffer.copyFrom(0, 0, buffer.getReadPointer(0), buffer.getNumSamples());  
 }
 
 //==============================================================================
