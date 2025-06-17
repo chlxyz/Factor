@@ -29,6 +29,8 @@ FactorAudioProcessorEditor::FactorAudioProcessorEditor(FactorAudioProcessor& p)
     addAndMakeVisible(waveform);
     startTimerHz(30); // update waveform
 
+	addAndMakeVisible(ledIndicator);
+
     setSize(400, 250); // expanded size for display
 }
 
@@ -40,17 +42,33 @@ FactorAudioProcessorEditor::~FactorAudioProcessorEditor()
 void FactorAudioProcessorEditor::timerCallback()
 {
     waveform.setAudioBuffer(processor.getVisualBuffer());
+    ledIndicator.setAudioBuffer(processor.getVisualBuffer());
 }
 
 void FactorAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    g.fillAll(juce::Colours::white);
 }
 
 
 void FactorAudioProcessorEditor::resized()
 {
-    depthSlider.setBounds(40, 40, 120, 120); // x, y, width, height
-    waveform.setBounds(160, 20, getWidth() - 180, 120);
+    auto area = getLocalBounds().reduced(20); // padding of 20px on all sides
+
+    // Reserve top row height (e.g., for slider + waveform)
+    auto topRow = area.removeFromTop(140);
+
+    // Depth slider on the left of top row
+    depthSlider.setBounds(topRow.removeFromLeft(120));
+
+    // Space between slider and waveform
+    topRow.removeFromLeft(20);
+
+    // Waveform uses the rest of the top row
+    waveform.setBounds(topRow);
+
+    // Remaining area for LED
+    area.removeFromTop(20); // spacing between waveform and LED
+    ledIndicator.setBounds(area.removeFromTop(40));
 }
 

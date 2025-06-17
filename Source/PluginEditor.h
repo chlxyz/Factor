@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "WaveformDisplay.h"
+#include "LEDIndicator.h"
 
 //==============================================================================
 /**
@@ -22,6 +23,7 @@ public:
     FactorAudioProcessorEditor (FactorAudioProcessor&);
     ~FactorAudioProcessorEditor() override;
 
+
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
@@ -32,6 +34,7 @@ private:
     FactorAudioProcessor& processor;
     juce::Slider depthSlider;
     WaveformDisplay waveform;
+	  LEDIndicator ledIndicator;
 
     void timerCallback() override;
 
