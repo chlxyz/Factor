@@ -39,7 +39,7 @@ FactorAudioProcessorEditor::~FactorAudioProcessorEditor()
 //==============================================================================
 void FactorAudioProcessorEditor::timerCallback()
 {
-    waveform.pushBuffer(processor.getVisualBuffer());
+    waveform.setAudioBuffer(processor.getVisualBuffer());
 }
 
 void FactorAudioProcessorEditor::paint(juce::Graphics& g)
