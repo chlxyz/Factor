@@ -34,7 +34,7 @@ private:
     FactorAudioProcessor& processor;
     juce::Slider depthSlider;
     WaveformDisplay waveform;
-	LEDIndicator ledIndicator;
+	  LEDIndicator ledIndicator;
 
     void timerCallback() override;
 
