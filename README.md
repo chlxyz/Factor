@@ -9,7 +9,7 @@ A simple VST3 plugin that uses an LFO to modulate audio, creating rhythmic effec
 
 Takes your audio
 
-Modulates the volume with an LFO
+Modulates the audio with an LFO to create pulsing or wavy effects
 
 ## + Controls
 
@@ -29,8 +29,7 @@ VST3 SDK
 
 ## + How to Use
 
-Coming soon: plugin files for Windows/macOS.
-Or simply clone this repository.
+Coming soon: plugin files for Windows/macOS, or simply clone this repository.
 
 ## + License
 MIT
