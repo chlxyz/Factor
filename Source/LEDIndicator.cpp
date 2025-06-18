@@ -9,8 +9,15 @@ void LEDIndicator::setAudioBuffer(const juce::AudioBuffer<float>& bufferToDraw)
 {
     buffer.makeCopyOf(bufferToDraw);
 
+    if (buffer.getNumChannels() > 0 && buffer.getNumSamples() > 0)
+    {
     float level = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
     isAudioDetected = (level > 0.01f);
+}
+    else
+    {
+        isAudioDetected = false;
+    }
 }
 
 void LEDIndicator::timerCallback()
