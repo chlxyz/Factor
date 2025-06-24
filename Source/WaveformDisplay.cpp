@@ -26,7 +26,7 @@ void WaveformDisplay::paint(juce::Graphics& g)
     auto* samples = buffer.getReadPointer(0);
     int numSamples = buffer.getNumSamples();
 
-    float scaleX = static_cast<float>(width) / numSamples;
+    float scaleX = static_cast<float>(width - 1) / (numSamples - 1);
 
     juce::Path path;
     path.startNewSubPath(0, midY);
@@ -34,7 +34,7 @@ void WaveformDisplay::paint(juce::Graphics& g)
     for (int i = 0; i < numSamples; ++i)
     {
         float x = i * scaleX;
-        float y = midY - (samples[i] * midY);
+        float y = midY - (samples[i] * midY * 10.0f); // temporarily amplify visually
         path.lineTo(x, y);
     }
 
