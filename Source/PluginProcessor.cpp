@@ -200,6 +200,9 @@ void FactorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
         }
     }
 
+    if (visualBuffer.getNumSamples() != buffer.getNumSamples())
+        visualBuffer.setSize(1, buffer.getNumSamples(), false, false, true);
+
     //visualBuffer.setSize(1, buffer.getNumSamples(), false, false, true);
     visualBuffer.copyFrom(0, 0, buffer.getReadPointer(0), buffer.getNumSamples());  
 }
