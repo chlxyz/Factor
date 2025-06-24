@@ -27,9 +27,5 @@ JUCE (C++)
 
 VST3 SDK
 
-## + How to Use
-
-Coming soon: plugin files for Windows/macOS, or simply clone this repository.
-
 ## + License
 MIT
