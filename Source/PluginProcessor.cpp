@@ -11,18 +11,19 @@
 
 //==============================================================================
 FactorAudioProcessor::FactorAudioProcessor()
-//#ifndef JucePlugin_PreferredChannelConfigurations
-//     : AudioProcessor (BusesProperties()
-//                     #if ! JucePlugin_IsMidiEffect
-//                      #if ! JucePlugin_IsSynth
-//                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-//                      #endif
-//                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-//                     #endif
-//                       )
-//#endif
+#ifndef JucePlugin_PreferredChannelConfigurations
+     : AudioProcessor (BusesProperties()
+                     #if ! JucePlugin_IsMidiEffect
+                      #if ! JucePlugin_IsSynth
+                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+                      #endif
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+                     #endif
+                       )
+#endif
 {
     addParameter(depthParam = new juce::AudioParameterFloat("depth", "Depth", 0.0f, 1.0f, 0.5f));
+    addParameter(mixParam = new juce::AudioParameterFloat("mix", "Mix", 0.0f, 1.0f, 0.5f));
 }
 
 FactorAudioProcessor::~FactorAudioProcessor()
@@ -96,8 +97,10 @@ void FactorAudioProcessor::prepareToPlay (double newSampleRate, int samplesPerBl
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-
+    maxBlockSize = samplesPerBlock;
+    visualBuffer.setSize(1, maxBlockSize);
     sampleRate = newSampleRate;
+    delayWritePositions.resize(getTotalNumInputChannels(), 0);
     delayBuffer.setSize(getTotalNumInputChannels(), (int)(2.0 * sampleRate));
     delayBuffer.clear();
     delayBufferWritePosition = 0;
@@ -160,35 +163,44 @@ void FactorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < numSamples; ++channel)
+    for (int channel = 0; channel < numChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
         auto* delayData = delayBuffer.getWritePointer(channel);
+        int& writePos = delayWritePositions[channel];
 
         for (int i = 0; i < numSamples; ++i)
         {
-            delayData[delayBufferWritePosition] = channelData[i];
+            delayData[writePos] = channelData[i];
 
-            float mod = std::sin(lfoPhase) * (*depthParam) * 0.01f; // up to 10ms
+            // Modulation
+            float mod = std::sin(lfoPhase) * (*depthParam) * 0.01f;
             float delayTime = mod + 0.005f;
             int delaySamples = static_cast<int>(delayTime * sampleRate);
 
-            int readPosition = delayBufferWritePosition - delaySamples;
+            int readPosition = writePos - delaySamples;
             if (readPosition < 0)
                 readPosition += delayBuffer.getNumSamples();
 
             float delayedSample = delayData[readPosition];
-            channelData[i] = delayedSample;
+            float drySample = channelData[i];
+            float mix = *mixParam;
+            channelData[i] = (1.0f - mix) * drySample + mix * delayedSample;
 
+            //channelData[i] = 0.5f * drySample + 0.5f * delayedSample;
+
+            // Update phase
             lfoPhase += 2.0f * juce::MathConstants<float>::pi * lfoFrequency / (float)sampleRate;
             if (lfoPhase >= 2.0f * juce::MathConstants<float>::pi)
                 lfoPhase -= 2.0f * juce::MathConstants<float>::pi;
 
-            delayBufferWritePosition = (delayBufferWritePosition + 1) % delayBuffer.getNumSamples();
+            // Increment write position
+            writePos = (writePos + 1) % delayBuffer.getNumSamples();
+
         }
     }
 
-    visualBuffer.setSize(1, buffer.getNumSamples(), false, false, true);
+    //visualBuffer.setSize(1, buffer.getNumSamples(), false, false, true);
     visualBuffer.copyFrom(0, 0, buffer.getReadPointer(0), buffer.getNumSamples());  
 }
 

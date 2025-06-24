@@ -16,11 +16,16 @@ FactorAudioProcessorEditor::FactorAudioProcessorEditor(FactorAudioProcessor& p)
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     depthSlider.setSliderStyle(juce::Slider::Rotary);
+	depthSlider.setSliderSnapsToMousePosition(true);
+    depthSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::orangered);
     depthSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
+	depthSlider.setTextBoxIsEditable(false);
+    depthSlider.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     depthSlider.setRange(0.0, 1.0, 0.01);
     depthSlider.setValue(*processor.depthParam);
     depthSlider.setNumDecimalPlacesToDisplay(2);
     depthSlider.setTextValueSuffix(" %");
+	depthSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::orangered);
     depthSlider.onValueChange = [this]() {
         *processor.depthParam = (float)depthSlider.getValue();
         };

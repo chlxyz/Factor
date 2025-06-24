@@ -53,13 +53,18 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    std::vector<int> delayWritePositions;
+
     const juce::AudioBuffer<float>& getVisualBuffer() const { return visualBuffer; }
 
     juce::AudioParameterFloat* depthParam;
+    juce::AudioParameterFloat* mixParam = nullptr;
+    
 
 private:
     juce::AudioBuffer<float> delayBuffer;
     int delayBufferWritePosition = 0;
+    int maxBlockSize = 512; // default
 
     juce::AudioBuffer<float> visualBuffer;
 
