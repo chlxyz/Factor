@@ -57,9 +57,7 @@ void LEDIndicator::paint(juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat().reduced(4);
 
-    juce::Colour glowColour = isAudioDetected
-        ? juce::Colour::fromHSV(hue, 1.0f, 1.0f, 1.0f)
-        : juce::Colours::darkgrey;
+    juce::Colour glowColour = isAudioDetected ? juce::Colours::white : juce::Colours::darkgrey;
 
     // Outer glow
     g.setColour(glowColour.withAlpha(0.4f));
