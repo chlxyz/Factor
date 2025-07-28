@@ -52,7 +52,8 @@ void FactorAudioProcessorEditor::timerCallback()
 
 void FactorAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::white);
+    juce::Image bgImage = juce::ImageCache::getFromMemory(BinaryData::bg_png, BinaryData::bg_pngSize);
+    g.drawImage(bgImage, getLocalBounds().toFloat());
 }
 
 
