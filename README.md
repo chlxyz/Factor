@@ -18,7 +18,7 @@ Rate – how fast it pulses
 ## + UI Preview
 
 <p align="left">
-  <img src="https://imgur.com/F19yAxN.png" alt="MasterHead">
+  <img src="https://imgur.com/2QGShfP" alt="MasterHead">
 </p>
 
 ## + Built With
